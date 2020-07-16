@@ -3,10 +3,12 @@ export default class controller{
 
     request: Request;
     response: Response;
+    params: any;
 
     constructor(request: Request, response: Response){
         this.request = request;
         this.response = response;
+        this.params = request.params;
         this.index();
     }
 
