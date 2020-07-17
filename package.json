@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Un framework web minimaliste basé sur express",
   "scripts": {
-    "build": "tsc -p .",
+    "build": "tsc -p . && cp -r ./src/views ./dist/views",
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts"
   },
