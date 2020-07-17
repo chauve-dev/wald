@@ -15,9 +15,9 @@ switch (type) {
                   if (err) throw err;
                 });
             });
-        console.log("Info : Contoleur et vue créer")
+        console.log("\t\t\tInfo : \tContoleur et vue créer")
       }else{
-          console.log("Info : Erreur les fichiers existe déjà.")
+          console.log("\t\t\tInfo : \tErreur les fichiers existe déjà.")
       }
     break;
   }
@@ -29,10 +29,15 @@ switch (type) {
                   if (err) throw err;
                 });
             });
-        console.log("Info : Contoleur créer")
+        console.log("\t\t\tInfo : \tContoleur créer")
       }else{
-          console.log("Info : Erreur le fichier existe déjà.")
+          console.log("\t\t\tInfo : \tErreur le fichier existe déjà.")
       }
+      break;
+  }
+
+  default: {
+      console.log('\t\t\tInfo : \tCommande non reconnu \n\t\t\t\tnode forge controller/vue %%nom%% \n\t\t\t\tnode forge controller %%nom%%');
       break;
   }
 }
