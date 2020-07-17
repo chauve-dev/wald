@@ -1,5 +1,4 @@
 import express from "express";
-import * as socketio from "socket.io";
 import route from "./route";
 import path from "path";
 import cookieParser from 'cookie-parser';
@@ -86,5 +85,6 @@ import('./socket').then((socket) => {
   socket.default(io)
   console.log('Info : Socket.io listening')
 });
+
 
 server.listen(5000, () => console.log("Info : Server Running"));
