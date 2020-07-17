@@ -1,4 +1,5 @@
 import express from "express";
+import * as socketio from "socket.io";
 import route from "./route";
 import path from "path";
 import cookieParser from 'cookie-parser';
@@ -77,4 +78,13 @@ route.forEach((element: any) => {
   console.log(`Info : ${element.path} Registered`)
 });
 
-const server = app.listen(5000, () => console.log("Info : Server Running"));
+let server = require("http").createServer(app);
+
+var io = require("socket.io")(server);
+
+import('./socket').then((socket) => {
+  socket.default(io)
+  console.log('Info : Socket.io listening')
+});
+
+server.listen(5000, () => console.log("Info : Server Running"));
