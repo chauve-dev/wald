@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const controller_1 = __importDefault(require("../app/controller"));
 class testController extends controller_1.default {
     index() {
-        this.response.send('testController');
+        this.response.send('ok');
     }
 }
 exports.default = testController;

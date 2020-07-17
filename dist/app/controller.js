@@ -4,6 +4,7 @@ class controller {
     constructor(request, response) {
         this.request = request;
         this.response = response;
+        this.params = request.params;
         this.index();
     }
     index() {

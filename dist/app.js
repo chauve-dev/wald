@@ -34,6 +34,11 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use(cookie_parser_1.default());
 app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
+if (route_1.default.length == 0) {
+    app.get("/", (req, res) => {
+        res.send('Le serveur existe bien mais aucune route est renseigné il faut éditer le fichier route.ts');
+    });
+}
 route_1.default.forEach((element) => {
     switch (element.type) {
         case "get": {

@@ -1,0 +1,38 @@
+var fs = require("fs");
+
+var args = process.argv.slice(2);
+var type = args[0].toLowerCase();
+args = args.slice(1);
+switch (type) {
+  case "controller/vue": {
+    if (!fs.existsSync("./src/views/"+args[0]+".pug") && !fs.existsSync("./src/controller/"+args[0]+"Controller.ts")) {
+        fs.writeFile("./src/views/"+args[0]+".pug", "p "+args[0], function (err) {
+            if (err) throw err;
+          });
+      
+          fs.readFile('./forge_templ/controllerTemplate', function(err, data) {
+              fs.writeFile("./src/controller/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", args[0]), function (err) {
+                  if (err) throw err;
+                });
+            });
+        console.log("Info : Contoleur et vue créer")
+      }else{
+          console.log("Info : Erreur les fichiers existe déjà.")
+      }
+    break;
+  }
+
+  case "controller":{
+    if (!fs.existsSync("./src/controller/"+args[0]+"Controller.ts")) {
+          fs.readFile('./forge_templ/controllerTemplate', function(err, data) {
+              fs.writeFile("./src/controller/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", 'index'), function (err) {
+                  if (err) throw err;
+                });
+            });
+        console.log("Info : Contoleur créer")
+      }else{
+          console.log("Info : Erreur le fichier existe déjà.")
+      }
+      break;
+  }
+}
