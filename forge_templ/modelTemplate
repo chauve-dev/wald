@@ -17,7 +17,7 @@ export class %%modelName%% extends Model {
     }
   },
   {
-    tableName: "%%modelName%%s",
+    tableName: "%%modelNameMin%%s",
     sequelize: database // this bit is important
   }
 );
