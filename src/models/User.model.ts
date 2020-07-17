@@ -1,6 +1,8 @@
 import { Sequelize, Model, DataTypes, BuildOptions } from "sequelize";
 import { database } from "../sequelize";
 
+import { Car } from "./Car.model"
+
 export class User extends Model {
   public id!: number;
   public nom!: string;
@@ -28,5 +30,11 @@ User.init(
     sequelize: database // this bit is important
   }
 );
+
+User.hasMany(Car, {
+  sourceKey: "id",
+  foreignKey: "userid",
+  as: "test"
+});
 
 User.sync({ force: false });

@@ -1,14 +1,15 @@
 import { Sequelize, Model, DataTypes, BuildOptions } from "sequelize";
 import { database } from "../sequelize";
 
-export class Node extends Model {
+export class Car extends Model {
   public id!: number;
   public name!: string;
+  public userid!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
-Node.init(
+Car.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -16,14 +17,16 @@ Node.init(
       primaryKey: true
     },
     name: {
-      type: new DataTypes.STRING(128),
-      allowNull: false
+      type: DataTypes.STRING
+    },
+    userid: {
+      type: DataTypes.INTEGER
     }
   },
   {
-    tableName: "nodes",
+    tableName: "cars",
     sequelize: database // this bit is important
   }
 );
 
-Node.sync({ force: false });
+Car.sync({ force: false });
