@@ -36,8 +36,22 @@ switch (type) {
       break;
   }
 
+  case "model":{
+    if (!fs.existsSync("./src/models/"+args[0]+".model.ts")) {
+      fs.readFile('./forge_templ/modelTemplate', function(err, data) {
+          fs.writeFile("./src/models/"+args[0]+".model.ts", data.toString().replace(new RegExp('%%modelName%%', 'g'), args[0]), function (err) {
+              if (err) throw err;
+            });
+        });
+      console.log("\t\t\tInfo : \tModel créer")
+    }else{
+        console.log("\t\t\tInfo : \tErreur le fichier existe déjà.")
+    }
+    break;
+  }
+
   default: {
-      console.log('\t\t\tInfo : \tCommande non reconnu \n\t\t\t\tnode forge controller/vue %%nom%% \n\t\t\t\tnode forge controller %%nom%%');
+      console.log('\t\t\tInfo : \tCommande non reconnu \n\t\t\t\tnode forge controller/vue %%nom%% \n\t\t\t\tnode forge controller %%nom%% \n\t\t\t\tnode forge model %%nom%%');
       break;
   }
 }

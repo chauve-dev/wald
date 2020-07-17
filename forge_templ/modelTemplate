@@ -1,0 +1,25 @@
+import { Sequelize, Model, DataTypes, BuildOptions } from "sequelize";
+import { database } from "../sequelize";
+
+export class %%modelName%% extends Model {
+  public id!: number;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+%%modelName%%.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    }
+  },
+  {
+    tableName: "%%modelName%%s",
+    sequelize: database // this bit is important
+  }
+);
+
+%%modelName%%.sync({ force: false });
