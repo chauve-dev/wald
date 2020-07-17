@@ -1,10 +1,11 @@
 import controller from "../app/controller";
-import { Node } from '../models/node.model';
+import { User } from '../models/User.model';
 
 export default class testController extends controller{
     index(){
-        Node.create<Node>({
-            name:"ok"
+        User.create<User>({
+            nom:"nom",
+            prenom:"prenom"
         })
         this.response.send('ok');
     }

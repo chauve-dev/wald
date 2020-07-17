@@ -1,25 +1,32 @@
 import { Sequelize, Model, DataTypes, BuildOptions } from "sequelize";
 import { database } from "../sequelize";
 
-export class %%modelName%% extends Model {
+export class User extends Model {
   public id!: number;
-
+  public nom!: string;
+  public prenom!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
-%%modelName%%.init(
+User.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true
+    },
+    prenom: {
+      type: DataTypes.STRING
+    },
+    nom: {
+      type: DataTypes.STRING
     }
   },
   {
-    tableName: "%%modelNameMin%%s",
+    tableName: "users",
     sequelize: database // this bit is important
   }
 );
 
-%%modelName%%.sync({ force: false });
+User.sync({ force: false });
