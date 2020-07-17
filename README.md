@@ -15,5 +15,7 @@ node forge controller/vue nom
 Cette commande crée uniquement le controleur et le fait pointer sur index
 node forge controller nom
 ```
+# Socket.io
+Wald inclus socket IO par défaut. le socket est déjà configuré sur le serveur web principal (5000 par défaut) il est possible de rajouter des évenements dans socket.ts
 
 > La perfection commence par la perte de la masse capilaire inutile.
