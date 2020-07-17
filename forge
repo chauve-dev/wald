@@ -39,7 +39,7 @@ switch (type) {
   case "model":{
     if (!fs.existsSync("./src/models/"+args[0]+".model.ts")) {
       fs.readFile('./forge_templ/modelTemplate', function(err, data) {
-          fs.writeFile("./src/models/"+args[0]+".model.ts", data.toString().replace(new RegExp('%%modelName%%', 'g'), args[0]).replace(new RegExp('%%modelNameMin%%', 'g'), args[0].toLowerCase()), function (err) {
+          fs.writeFile("./src/models/"+args[0]+".model.ts", data.toString().replace(new RegExp('%%modelName%%', 'g'), args[0]), function (err) {
               if (err) throw err;
             });
         });
