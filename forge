@@ -5,13 +5,13 @@ var type = args[0].toLowerCase();
 args = args.slice(1);
 switch (type) {
   case "controller/vue": {
-    if (!fs.existsSync("./src/views/"+args[0]+".pug") && !fs.existsSync("./src/controller/"+args[0]+"Controller.ts")) {
+    if (!fs.existsSync("./src/views/"+args[0]+".pug") && !fs.existsSync("./src/controller/routes/"+args[0]+"Controller.ts")) {
         fs.writeFile("./src/views/"+args[0]+".pug", "p "+args[0], function (err) {
             if (err) throw err;
           });
       
           fs.readFile('./forge_templ/controllerTemplate', function(err, data) {
-              fs.writeFile("./src/controller/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", args[0]), function (err) {
+              fs.writeFile("./src/controller/routes/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", args[0]), function (err) {
                   if (err) throw err;
                 });
             });
@@ -23,9 +23,23 @@ switch (type) {
   }
 
   case "controller":{
-    if (!fs.existsSync("./src/controller/"+args[0]+"Controller.ts")) {
+    if (!fs.existsSync("./src/controller/routes/"+args[0]+"Controller.ts")) {
           fs.readFile('./forge_templ/controllerTemplate', function(err, data) {
-              fs.writeFile("./src/controller/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", 'index'), function (err) {
+              fs.writeFile("./src/controller/routes/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", 'index'), function (err) {
+                  if (err) throw err;
+                });
+            });
+        console.log("\t\t\tInfo : \tContoleur créer")
+      }else{
+          console.log("\t\t\tInfo : \tErreur le fichier existe déjà.")
+      }
+      break;
+  }
+
+  case "middleware":{
+    if (!fs.existsSync("./src/controller/middleware/"+args[0]+"Controller.ts")) {
+          fs.readFile('./forge_templ/controllerMiddlewareTemplate', function(err, data) {
+              fs.writeFile("./src/controller/middleware/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", 'index'), function (err) {
                   if (err) throw err;
                 });
             });

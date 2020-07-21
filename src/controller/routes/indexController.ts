@@ -1,4 +1,4 @@
-import controller from "../app/controller";
+import controller from "../../app/controller";
 
 export default class indexContoller extends controller{
     index(){

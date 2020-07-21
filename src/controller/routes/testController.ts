@@ -1,6 +1,6 @@
-import controller from "../app/controller";
-import { user } from "../models/user.model"
-import { car } from "../models/car.model"
+import controller from "../../app/controller";
+import { user } from "../../models/user.model"
+import { car } from "../../models/car.model"
 
 export default class testController extends controller{
     async index(){
