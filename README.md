@@ -36,6 +36,9 @@ node forge controller nom
 
 Cette commande crée un nouveau model
 node forge model nom
+
+Cette commande crée un nouveau middleware
+node forge middleware nom
 ```
 # Socket.io
 Wald inclus socket IO par défaut. le socket est déjà configuré sur le serveur web principal (5000 par défaut) il est possible de rajouter des évenements dans socket.ts
