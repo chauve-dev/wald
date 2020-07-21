@@ -106,19 +106,19 @@ async function registerRoute(element: any){
   }
 }
 
-async function importRoutesAndMiddleware(){
+async function importRoutes(){
   for(let element of route){
     await registerRoute(element);
     console.log(`Info : ${element.path} Registered`)
   }
   console.log('Toutes les routes sont enregistré.');
-  
+
   app.use(function(req: express.Request, res: express.Response, next: express.NextFunction){
     res.render('error')
   })
 }
 
-importRoutesAndMiddleware()
+importRoutes()
 
 
 let server = require("http").createServer(app);
