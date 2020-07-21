@@ -12,6 +12,12 @@ Dans l'état le projet utilise Knex.js et objection.js pour l'ORM (object relati
 L'application inclu maintenant les middleWare qui s'éxecute sur une route définie avec une méthode (get, post, ...).
 Mais la méthode index des contrôleurs de route n'est pas forcément une méthode de render et peut-être utilisé pour exécuter d'autres parties de code avant d'exécuter une méthode de render qui renvoie la page définitive, la structure sera déterminé par votre manière de coder et votre logique, il est tout à fait possible de tout mettre dans le contrôleur ou de créer des contrôleurs par fonctionnalité (authentification) qui seront appelés dans le contrôleur de vue.
 
+Ainsi je ne recommande pas l'utilisation des middleware pour ce framework, sa fonctionne mais ce n'est pas l'idée voulu.
+si vous voulez faire une page avec authentification /admin par exemple dans ce cas la il faudrait :
+Créer un controleur Auth qui extend du controleur par défaut
+Puis faire extend votre controleur de route sur le controleur auth
+
+Ainsi vous pouvez implémenter les méthode d'authentification dans le controleur auth et le réutiliser plus tard.
 # Routes
 Les routes se trouve dans route.ts
 # MiddleWare
@@ -22,7 +28,6 @@ Une middleware prend des routes fixe ou dynamique
 /x/* middleware global à x
 /x middleware propre à x
 ```
-
 # Erreur 404 ?
 Dans l'état wald gère les erreur 404 avec le controleur errorController.ts qui dispose des même possibilité qu'un controleur de middleWare.
 # Forge
