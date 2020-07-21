@@ -4,10 +4,6 @@ import { car } from "../../models/car.model"
 
 export default class testController extends authController{
 
-    index(){
-        super.index()
-    }
-
     async render(){
         await user.query().insert({
             username: 'Wald Walder',
