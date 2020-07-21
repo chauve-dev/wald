@@ -1,17 +1,21 @@
 import controller from "../app/controller";
-import { User } from '../models/User.model';
-import { Car } from '../models/Car.model';
+import { user } from "../models/user.model"
+import { car } from "../models/car.model"
 
 export default class testController extends controller{
     async index(){
-        User.create({
-            prenom: "Test",
-            nom: "Test"
+        await user.query().insert({
+            username: 'Wald Walder',
+            email: 'wald@wald.wald'
         })
-        Car.create({
-            name: 'test',
-            userid: 1
+
+        await car.query().insert({
+            name: 'Walda',
+            userId: 0
         })
-        this.response.send(await Car.findAll());
+
+        car.query().where('userId', 0).then(users => {
+            this.response.send(users)
+        });
     }
 }
