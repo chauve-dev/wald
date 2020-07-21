@@ -111,9 +111,9 @@ async function importRoutesAndMiddleware(){
     await registerRoute(element);
     console.log(`Info : ${element.path} Registered`)
   }
-  console.log('ok')
-
-  app.use(function(req, res, next){
+  console.log('Toutes les routes sont enregistré.');
+  
+  app.use(function(req: express.Request, res: express.Response, next: express.NextFunction){
     res.render('error')
   })
 }
