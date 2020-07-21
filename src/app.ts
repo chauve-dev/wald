@@ -114,7 +114,9 @@ async function importRoutes(){
   console.log('Toutes les routes sont enregistré.');
 
   app.use(function(req: express.Request, res: express.Response, next: express.NextFunction){
-    res.render('error')
+    import("./controller/errorController").then((ctrl)=>{
+      new ctrl.default(req, res, next);
+    });
   })
 }
 
