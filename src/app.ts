@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 if (route.length == 0){
   app.get("/", (req, res) => {
     res.send('Le serveur existe bien mais aucune route est renseigné il faut éditer le fichier route.ts')
@@ -52,10 +53,10 @@ middleWare.forEach((element: any) => {
   });
 });
 
-route.forEach((element: any) => {
+async function registerRoute(element: any){
   switch (element.type) {
     case "get": {
-      import("./controller/routes/" + element.controller).then((ctrl) => {
+      await import("./controller/routes/" + element.controller).then((ctrl) => {
         app.get(element.path, (req, res) => {
           new ctrl.default(req, res);
         });
@@ -63,7 +64,7 @@ route.forEach((element: any) => {
       break;
     }
     case "post": {
-      import("./controller/routes/" + element.controller).then((ctrl) => {
+      await import("./controller/routes/" + element.controller).then((ctrl) => {
         app.post(element.path, (req, res) => {
           new ctrl.default(req, res);
         });
@@ -71,7 +72,7 @@ route.forEach((element: any) => {
       break;
     }
     case "put": {
-      import("./controller/routes/" + element.controller).then((ctrl) => {
+      await import("./controller/routes/" + element.controller).then((ctrl) => {
         app.put(element.path, (req, res) => {
           new ctrl.default(req, res);
         });
@@ -79,7 +80,7 @@ route.forEach((element: any) => {
       break;
     }
     case "patch": {
-      import("./controller/routes/" + element.controller).then((ctrl) => {
+      await import("./controller/routes/" + element.controller).then((ctrl) => {
         app.patch(element.path, (req, res) => {
           new ctrl.default(req, res);
         });
@@ -87,7 +88,7 @@ route.forEach((element: any) => {
       break;
     }
     case "delete": {
-      import("./controller/routes/" + element.controller).then((ctrl) => {
+      await import("./controller/routes/" + element.controller).then((ctrl) => {
         app.delete(element.path, (req, res) => {
           new ctrl.default(req, res);
         });
@@ -95,7 +96,7 @@ route.forEach((element: any) => {
       break;
     }
     default: {
-      import("./controller/routes/" + element.controller).then((ctrl) => {
+      await import("./controller/routes/" + element.controller).then((ctrl) => {
         app.get(element.path, (req, res) => {
           new ctrl.default(req, res);
         });
@@ -103,8 +104,22 @@ route.forEach((element: any) => {
       break;
     }
   }
-  console.log(`Info : ${element.path} Registered`)
-});
+}
+
+async function importRoutesAndMiddleware(){
+  for(let element of route){
+    await registerRoute(element);
+    console.log(`Info : ${element.path} Registered`)
+  }
+  console.log('ok')
+
+  app.use(function(req, res, next){
+    res.render('error')
+  })
+}
+
+importRoutesAndMiddleware()
+
 
 let server = require("http").createServer(app);
 
