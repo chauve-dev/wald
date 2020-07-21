@@ -7,7 +7,7 @@ Wald fonctionne avec un système de routes similaire à angular, les routes sont
 
 Pour créer un nouveau controleur et une nouvelle vue (pug) il suffit d'utiliser la forge (voir plus bas).
 
-Dans l'état le projet utilise Knex.js et objection.js pour l'ORM ainsi toutes les méthodes knex (knex migrate:latest par exemple) sont disponible.
+Dans l'état le projet utilise Knex.js et objection.js pour l'ORM (object relation mapping) ainsi toutes les méthodes knex (knex migrate:latest par exemple) sont disponible.
 # Logique
 En l'état il n'existe pas vraiment de middleware par contre la méthode index des contrôleurs de route n'est pas forcément une méthode de render et peut-être utilisé pour exécuter d'autres parties de code avant d'exécuter une méthode de render qui renvoie la page définitive, la structure sera déterminé par votre manière de coder et votre logique, il est tout à fait possible de tout mettre dans le contrôleur ou de créer des contrôleurs par fonctionnalité (authentification) qui seront appelés dans le contrôleur de vue.
 # Forge
