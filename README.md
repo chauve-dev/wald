@@ -3,9 +3,9 @@ Un framework web minimaliste basé sur express
 # Important
 Attention d'origine cette surcouche est un test que j'ai au final publié, si vous décidez de l'utiliser il faut prendre en compte que ce système est susceptible de subir de lourdes modifications. Ce sera donc à vos risque et péril.
 # Fonctionnement
-Wald fonctionne avec un système de route similaire à angular, les routes sont spécifié en JSON dans route.ts et pointe vers un controleur.
+Wald fonctionne avec un système de routes similaire à angular, les routes sont spécifié en JSON dans route.ts et pointes vers un controleur.
 
-Pour créer un nouveau controleur et une nouvelle vue (pug) il suffit d'utilisé la forge (voir plus bas).
+Pour créer un nouveau controleur et une nouvelle vue (pug) il suffit d'utiliser la forge (voir plus bas).
 
 Dans l'état le projet utilise Knex.js et objection.js pour l'ORM ainsi toutes les méthodes knex (knex migrate:latest par exemple) sont disponible.
 # Logique
