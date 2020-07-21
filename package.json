@@ -30,5 +30,13 @@
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.6"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jojojojojota/wald.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jojojojojota/wald/issues"
+  },
+  "homepage": "https://github.com/jojojojojota/wald#readme"
 }
