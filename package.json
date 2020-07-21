@@ -4,7 +4,7 @@
   "description": "Un framework web minimaliste basé sur express",
   "scripts": {
     "build": "tsc -p . && cp -r ./src/views ./dist/views",
-    "start": "node dist/app.ts",
+    "start": "node dist/app.js",
     "dev": "nodemon src/app.ts"
   },
   "author": "JEANTET Joey",
