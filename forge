@@ -1,5 +1,8 @@
 var fs = require("fs");
 
+if(process.argv[2]==undefined)
+return;
+
 var args = process.argv.slice(2);
 var type = args[0].toLowerCase();
 args = args.slice(1);
