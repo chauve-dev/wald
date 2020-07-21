@@ -32,7 +32,8 @@ export class user extends Model {
             properties: {
                 id: {type: 'integer'},
                 username: {type: 'string', minLength: 1, maxLength: 255},
-                email: {type: 'string', minLength: 1, maxLength: 255}
+                email: {type: 'string', minLength: 1, maxLength: 255},
+                remember:{type:'boolean'}
             }
         }
     }
