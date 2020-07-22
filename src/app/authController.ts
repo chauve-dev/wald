@@ -4,17 +4,17 @@ export default class authController extends controller{
 
     index(){
         if(true){
-            this.render()
+            this.render();
         }else{
-            this.error()
+            this.error();
         }
     }
 
     render(){
-        this.response.send('ok')
+        this.response.send('ok');
     }
 
     error(){
-        this.response.send('no')
+        this.response.send('no');
     }
 }

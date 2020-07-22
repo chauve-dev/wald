@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 if (route.length == 0){
   app.get("/", (req, res) => {
-    res.send('Le serveur existe bien mais aucune route est renseigné il faut éditer le fichier route.ts')
+    res.send('Le serveur existe bien mais aucune route est renseigné il faut éditer le fichier route.ts');
   });
 }
 
@@ -120,7 +120,7 @@ async function importRoutes(){
   })
 }
 
-importRoutes()
+importRoutes();
 
 
 let server = require("http").createServer(app);
