@@ -3,6 +3,7 @@ import route from "./route";
 import middleWare from "./middlewares"
 import path from "path";
 import cookieParser from 'cookie-parser';
+var sitemap = require('express-sitemap')();
 const sassMiddleware = require('node-sass-middleware');
 import logger from 'morgan';
 
@@ -125,6 +126,11 @@ async function importRoutes(){
       new ctrl.default(req, res, next);
     });
   })
+
+  
+  sitemap.generate(app); // generate sitemap from express route, you can set generate inside sitemap({})
+  
+  sitemap.XMLtoFile(__dirname+'/public/sitemap.xml'); // write this map to file
 }
 
 importRoutes();
