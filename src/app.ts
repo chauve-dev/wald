@@ -147,4 +147,4 @@ import('./socket').then((socket) => {
 });
 
 
-server.listen(5000, () => console.log("Info : Server Running"));
+server.listen(process.env.APP_PORT || 3000, () => console.log("Info : Server Running"));
