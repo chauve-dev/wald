@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "Un framework web minimaliste basé sur express",
   "scripts": {
-    "build": "tsc -p . && cp -r ./src/views ./dist/views",
+    "build": "tsc -p . && cp -r ./src/views ./dist/views  && cp -r ./src/public ./dist/public",
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts"
   },
@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "knex": "^0.21.2",
     "morgan": "^1.10.0",
+    "node-sass-middleware": "^0.11.0",
     "objection": "^2.2.1",
     "pg": "^8.3.0",
     "pg-hstore": "^2.3.3",

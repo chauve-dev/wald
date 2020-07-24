@@ -3,6 +3,7 @@ import route from "./route";
 import middleWare from "./middlewares"
 import path from "path";
 import cookieParser from 'cookie-parser';
+var sassMiddleware = require('node-sass-middleware');
 import logger from 'morgan';
 
 
@@ -16,6 +17,12 @@ app.set('view engine', 'pug');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(sassMiddleware({
+  src: path.join(__dirname, 'public'),
+  dest: path.join(__dirname, 'public'),
+  indentedSyntax: true, // true = .sass and false = .scss
+  sourceMap: true
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
