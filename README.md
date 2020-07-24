@@ -18,24 +18,22 @@ Ensuite un outil est fournis pour simplifier le développement je vous invite à
 
 ## Structure
 ```
-projet 
-│
-└─── src
-    |     app/  -> contient les classe parente (controleur par défaut et autres)
-    └─── controller
-    |    |
-    |    └─── middleware/   -> controleur de middlewares
-    |    |
-    |    └─── routes/       -> controleur de routes
-    |    migrations/ -> Fichiers de migration (voir knex.js)
-    └─── models -> models (générer depuis la forge)
-    |
-    └─── public -> tous les documents disponible coté client à l'adresse /
-    |
-    └─── views -> les vues Pug (générer depuis la forge)
-    |     route.ts -> fichier où sont enregistrés les routes
-    |     socket.ts -> fichier où sont enregistrés les channel socket
-    |     middlewares.ts -> fichier où sont enregistrés les middlewares
+📦src
+ ┣ 📂app                        -> Dossier pour les classes parente
+ ┃ ┣ 📜authController.ts        -> controleur auth d'exemple
+ ┃ ┣ 📜controller.ts            -> controleur par défaut
+ ┃ ┗ 📜controllerMiddleware.ts  -> controleur de middleware par défaut
+ ┣ 📂controller                 -> Dossier pour les controleurs
+ ┃ ┣ 📂middleware               -> Dossier pour les controleurs de middlewares
+ ┃ ┣ 📂routes                   -> Dossier pour les controleurs de routes
+ ┃ ┗ 📜errorController.ts       -> Controleur de gestion d'erreur
+ ┣ 📂migrations                 -> Fichiers de migration (voir knex.js)
+ ┣ 📂models                     -> models (générer depuis la forge)
+ ┣ 📂public                     -> tous les documents disponible coté client à l'adresse /
+ ┣ 📂views                      -> les vues Pug (générer depuis la forge)
+ ┣ 📜middlewares.ts             -> fichier où sont enregistrés les middlewares
+ ┣ 📜route.ts                   -> fichier où sont enregistrés les routes
+ ┗ 📜socket.ts                  -> fichier où sont enregistrés les channel socket
 
 ```
 
