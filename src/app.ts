@@ -1,4 +1,5 @@
 import express from "express";
+import session from 'express-session';
 import route from "./route";
 import middleWare from "./middlewares"
 import path from "path";
@@ -26,6 +27,19 @@ app.use(sassMiddleware({
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+var sess: any = {
+  resave: false,
+  saveUninitialized: true,
+  secret: process.env.SESSION_SECRET,
+  cookie: {}
+}
+ 
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
+ 
+app.use(session(sess))
 
 
 if (route.length == 0){

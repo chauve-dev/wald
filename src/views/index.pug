@@ -4,7 +4,7 @@ block content
   h1= title
   p Welcome to #{title}
   script.
-    var socket = io.connect('127.0.0.1:5000');
+    var socket = io.connect();
     socket.on('message', function(data){
       alert(data)
     })
