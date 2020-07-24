@@ -3,7 +3,8 @@ import route from "./route";
 import middleWare from "./middlewares"
 import path from "path";
 import cookieParser from 'cookie-parser';
-var sassMiddleware = require('node-sass-middleware');
+const robots = require('robots.txt')
+const sassMiddleware = require('node-sass-middleware');
 import logger from 'morgan';
 
 
@@ -23,6 +24,7 @@ app.use(sassMiddleware({
   indentedSyntax: true, // true = .sass and false = .scss
   sourceMap: true
 }));
+app.use(robots(__dirname+'/robots.txt'))
 app.use(express.static(path.join(__dirname, 'public')));
 
 
