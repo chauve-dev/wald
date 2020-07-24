@@ -5,6 +5,7 @@ import path from "path";
 import cookieParser from 'cookie-parser';
 var sitemap = require('express-sitemap')();
 const sassMiddleware = require('node-sass-middleware');
+require('dotenv').config()
 import logger from 'morgan';
 
 
@@ -21,7 +22,7 @@ app.use(cookieParser());
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
-  indentedSyntax: true, // true = .sass and false = .scss
+  indentedSyntax: process.env.INDEX_SYNTAX||true, // true = .sass and false = .scss
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
