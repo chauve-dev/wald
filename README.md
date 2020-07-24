@@ -33,6 +33,9 @@ projet
     └─── public -> tous les documents disponible coté client à l'adresse /
     |
     └─── views -> les vues Pug (générer depuis la forge)
+    |     route.ts -> fichier où sont enregistrés les routes
+    |     socket.ts -> fichier où sont enregistrés les channel socket
+    |     middlewares.ts -> fichier où sont enregistrés les middlewares
 
 ```
 
