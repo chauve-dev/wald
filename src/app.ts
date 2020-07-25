@@ -31,6 +31,7 @@ var sess: any = {
   resave: false,
   saveUninitialized: true,
   secret: process.env.SESSION_SECRET,
+  name: 'waldSession',
   cookie: {}
 }
  
