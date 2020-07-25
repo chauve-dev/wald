@@ -2,8 +2,8 @@ import controller from "../../app/controller";
 
 export default class sessionController extends controller{
     index(){
-        if(this.request.session){
-            this.response.send(this.request.session.test);
+        if(this.doSessionExists()){
+            this.response.send(this.session.test);
         }else{
             this.response.send('no');
         }
