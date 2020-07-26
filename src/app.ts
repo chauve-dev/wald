@@ -88,9 +88,9 @@ async function registerRoute(element: any){
         new ctrl.default(req, res);
       });
     });
-    console.log(`Info : ${element.path} Registered`)
+    console.log(`\x1b[33m[Info] > ${element.path} Registered`,'\x1b[0m')
   }else{
-    console.log(`Info : ${element.path} Not registered ${type} do not exists`)
+    console.log(`\x1b[31m[Error] > ${element.path} not registered method ${type} do not exists`,'\x1b[0m')
   }
 }
 
@@ -106,14 +106,14 @@ function importMiddlewares(){
   for (let element of middleWare){
     registerMiddleware(element);
   }
-  console.log('Tous les middlewares sont enregistré.');
+  console.log('\x1b[36m[Info] > Tous les middlewares sont enregistré.','\x1b[0m');
 }
 
 async function importRoutes(){
   for(let element of route){
     await registerRoute(element);
   }
-  console.log('Toutes les routes sont enregistré.');
+  console.log('\x1b[36m[Info] > Toutes les routes sont enregistré.','\x1b[0m');
 }
 
 function generateSiteMap(){
@@ -122,7 +122,7 @@ function generateSiteMap(){
 }
 
 function startServer(server: any) {
-  server.listen(process.env.APP_PORT || 3000, () => console.log("Info : Server Running"));
+  server.listen(process.env.APP_PORT || 3000, () => console.log("\x1b[32m[Info] > Server Running",'\x1b[0m'));
 }
 
 async function init() {
@@ -143,7 +143,7 @@ async function init() {
   // register the socket IO file (maybe this will change in future to setup socket channel controllers)
   await import('./socket').then((socket) => {
     socket.default(io)
-    console.log('Info : Socket.io listening')
+    console.log('\x1b[36m[Info] > Socket.io listening','\x1b[0m')
   });
 
   // start the final server
