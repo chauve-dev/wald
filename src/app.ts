@@ -11,11 +11,10 @@ import logger from 'morgan';
 import SocketIO from "socket.io";
 
 
-const app: express.Application = express();
+const app: any = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
 
 //app.use(logger('dev'));
 app.use(express.json());
@@ -28,6 +27,9 @@ app.use(sassMiddleware({
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+//Session declaration
 var sess: any = {
   resave: false,
   saveUninitialized: true,
@@ -35,23 +37,22 @@ var sess: any = {
   name: 'waldSession',
   cookie: {}
 }
- 
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
 }
-
-
 var sessionMiddleware = session(sess)
+//Session declaration
 
 
+//Check if routes exists
 if (route.length == 0){
-  app.get("/", (req, res) => {
+  app.get("/", (req: express.Request, res: express.Response) => {
     res.send('Le serveur existe bien mais aucune route est renseigné il faut éditer le fichier route.ts');
   });
 }
 
-middleWare.forEach((element: any) => {
+function registerMiddleware(element: any){
   app.use(function (req: express.Request, res: express.Response, next: express.NextFunction) {
     if(element.path == '*'){
       import("./controller/middleware/" + element.controller).then((ctrl) => {
@@ -77,98 +78,75 @@ middleWare.forEach((element: any) => {
       }
     }
   });
-});
+}
 
 async function registerRoute(element: any){
-  switch (element.type) {
-    case "get": {
-      await import("./controller/routes/" + element.controller).then((ctrl) => {
-        app.get(element.path, (req, res) => {
-          new ctrl.default(req, res);
-        });
+  var type: string = element.type.toLowerCase() || 'get';
+  if(['get', 'post', 'put', 'delete'].includes(type)){
+    await import("./controller/routes/" + element.controller).then((ctrl) => {
+      app[type](element.path, (req: express.Request, res: express.Response) => {
+        new ctrl.default(req, res);
       });
-      break;
-    }
-    case "post": {
-      await import("./controller/routes/" + element.controller).then((ctrl) => {
-        app.post(element.path, (req, res) => {
-          new ctrl.default(req, res);
-        });
-      });
-      break;
-    }
-    case "put": {
-      await import("./controller/routes/" + element.controller).then((ctrl) => {
-        app.put(element.path, (req, res) => {
-          new ctrl.default(req, res);
-        });
-      });
-      break;
-    }
-    case "patch": {
-      await import("./controller/routes/" + element.controller).then((ctrl) => {
-        app.patch(element.path, (req, res) => {
-          new ctrl.default(req, res);
-        });
-      });
-      break;
-    }
-    case "delete": {
-      await import("./controller/routes/" + element.controller).then((ctrl) => {
-        app.delete(element.path, (req, res) => {
-          new ctrl.default(req, res);
-        });
-      });
-      break;
-    }
-    default: {
-      await import("./controller/routes/" + element.controller).then((ctrl) => {
-        app.get(element.path, (req, res) => {
-          new ctrl.default(req, res);
-        });
-      });
-      break;
-    }
+    });
+    console.log(`Info : ${element.path} Registered`)
+  }else{
+    console.log(`Info : ${element.path} Not registered ${type} do not exists`)
   }
 }
 
-async function importRoutes(){
-  for(let element of route){
-    await registerRoute(element);
-    console.log(`Info : ${element.path} Registered`)
-  }
-  console.log('Toutes les routes sont enregistré.');
-
+function registerErrorMiddleWare(){
   app.use(function(req: express.Request, res: express.Response, next: express.NextFunction){
     import("./controller/errorController").then((ctrl)=>{
       new ctrl.default(req, res, next);
     });
   })
+}
 
-  
+function importMiddlewares(){
+  for (let element of middleWare){
+    registerMiddleware(element);
+  }
+  console.log('Tous les middlewares sont enregistré.');
+}
+
+async function importRoutes(){
+  for(let element of route){
+    await registerRoute(element);
+  }
+  console.log('Toutes les routes sont enregistré.');
+}
+
+function generateSiteMap(){
   sitemap.generate(app); // generate sitemap from express route, you can set generate inside sitemap({})
-  
   sitemap.XMLtoFile(__dirname+'/public/sitemap.xml'); // write this map to file
 }
 
+function startServer(server: any) {
+  server.listen(process.env.APP_PORT || 3000, () => console.log("Info : Server Running"));
+}
 
-let server = require("http").createServer(app);
+async function init() {
+  importMiddlewares();
+  await importRoutes();
+  registerErrorMiddleWare();
+  generateSiteMap();
 
-var io = require("socket.io")(server);
+  var server = require("http").createServer(app);
+  var io = require("socket.io")(server);
 
-io.use(function(socket: SocketIO.Socket, next: any) {
-  sessionMiddleware(socket.request, socket.request.res || {}, next);
-});
+  io.use(function(socket: SocketIO.Socket, next: any) {
+    sessionMiddleware(socket.request, socket.request.res || {}, next);
+  });
 
-import('./socket').then((socket) => {
-  socket.default(io)
-  console.log('Info : Socket.io listening')
-});
+  await import('./socket').then((socket) => {
+    socket.default(io)
+    console.log('Info : Socket.io listening')
+  });
+
+  app.use(sessionMiddleware)
+
+  startServer(server);
+}
 
 
-app.use(sessionMiddleware)
-
-importRoutes();
-
-
-server.listen(process.env.APP_PORT || 3000, () => console.log("Info : Server Running"));
+init();
