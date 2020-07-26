@@ -126,25 +126,27 @@ function startServer(server: any) {
 }
 
 async function init() {
-  importMiddlewares();
-  await importRoutes();
-  registerErrorMiddleWare();
-  generateSiteMap();
+  app.use(sessionMiddleware); //Register session middleware
+  importMiddlewares(); //import all middlewares
+  await importRoutes(); // import all routes synchronously
+  registerErrorMiddleWare(); // register the last middleware (404)
+  generateSiteMap(); // generate the site map
 
-  var server = require("http").createServer(app);
-  var io = require("socket.io")(server);
+  var server = require("http").createServer(app); // create the http server with express app
+  var io = require("socket.io")(server); // declare socket.io server
 
+  // register the session middleware for socket io (to get access to session in socket.io)
   io.use(function(socket: SocketIO.Socket, next: any) {
     sessionMiddleware(socket.request, socket.request.res || {}, next);
   });
 
+  // register the socket IO file (maybe this will change in future to setup socket channel controllers)
   await import('./socket').then((socket) => {
     socket.default(io)
     console.log('Info : Socket.io listening')
   });
 
-  app.use(sessionMiddleware)
-
+  // start the final server
   startServer(server);
 }
 
