@@ -8,6 +8,7 @@ var sitemap = require('express-sitemap')();
 const sassMiddleware = require('node-sass-middleware');
 require('dotenv').config()
 import logger from 'morgan';
+import SocketIO from "socket.io";
 
 
 const app: express.Application = express();
@@ -39,8 +40,9 @@ if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
 }
- 
-app.use(session(sess))
+
+
+var sessionMiddleware = session(sess)
 
 
 if (route.length == 0){
@@ -149,17 +151,24 @@ async function importRoutes(){
   sitemap.XMLtoFile(__dirname+'/public/sitemap.xml'); // write this map to file
 }
 
-importRoutes();
-
 
 let server = require("http").createServer(app);
 
 var io = require("socket.io")(server);
 
+io.use(function(socket: SocketIO.Socket, next: any) {
+  sessionMiddleware(socket.request, socket.request.res || {}, next);
+});
+
 import('./socket').then((socket) => {
   socket.default(io)
   console.log('Info : Socket.io listening')
 });
+
+
+app.use(sessionMiddleware)
+
+importRoutes();
 
 
 server.listen(process.env.APP_PORT || 3000, () => console.log("Info : Server Running"));
