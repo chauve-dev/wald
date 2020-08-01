@@ -2,6 +2,7 @@ import { Model } from 'objection';
 import knex from '../knex'
 
 import { car } from './car.model'
+import { subController } from '../subController'
 
 Model.knex(knex)
 
@@ -20,9 +21,15 @@ export class user extends Model {
         }
       };
 
+      static afterInsert({ inputItems }: any) {
+        subController.index('user', inputItems[0])
+      }
+
     static get tableName() {
         return 'users';
     }
+
+
 
     static get jsonSchema() {
         return {

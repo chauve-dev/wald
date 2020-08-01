@@ -133,7 +133,7 @@ async function init() {
   generateSiteMap(); // generate the site map
 
   var server = require("http").createServer(app); // create the http server with express app
-  var io = require("socket.io")(server); // declare socket.io server
+  var io: SocketIO.Server = require("socket.io")(server); // declare socket.io server
 
   // register the session middleware for socket io (to get access to session in socket.io)
   io.use(function(socket: SocketIO.Socket, next: any) {
@@ -148,7 +148,8 @@ async function init() {
 
   // start the final server
   startServer(server);
+  return io;
 }
+var io = init()
 
-
-init();
+export default io

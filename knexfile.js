@@ -1,4 +1,4 @@
-// Update with your config settings.
+//require('ts-node/register');
 var migrations = __dirname+'/src/migrations/'
 var seeds = __dirname+'/src/seeds/'
 
@@ -14,11 +14,12 @@ module.exports = {
       port: process.env.DEV_DB_PORT||'5432',
       database: process.env.DEV_DB_NAME||'wald',
       user: process.env.DEV_DB_USER||'postgres',
-      password: process.env.DEV_DB_PASS||'postgres'
+      password: process.env.DEV_DB_PASS||'postgres',
+      filename: process.env.DEB_FILE_NAME||'./db.sqlite'
     },
     migrations: {
       tableName: 'knex_migrations',
-      directory: migrations
+      directory: migrations,
     },
     seeds: {
       directory: seeds
@@ -32,10 +33,11 @@ module.exports = {
       port: process.env.STA_DB_PORT||'5432',
       database: process.env.STA_DB_NAME||'wald',
       user:     process.env.STA_DB_USER||'postgres',
-      password: process.env.STA_DB_PASS||'postgres'
+      password: process.env.STA_DB_PASS||'postgres',
+      filename: process.env.STA_FILE_NAME||'./db.sqlite'
     },
     pool: {
-      min: 2,
+      min: 0,
       max: 10
     },
     migrations: {
@@ -54,10 +56,11 @@ module.exports = {
       port: process.env.PROD_DB_PORT||'5432',
       database: process.env.PROD_DB_NAME||'wald',
       user:     process.env.PROD_DB_USER||'postgres',
-      password: process.env.PROD_DB_PASS||'postgres'
+      password: process.env.PROD_DB_PASS||'postgres',
+      filename: process.env.PROD_FILE_NAME||'./db.sqlite'
     },
     pool: {
-      min: 2,
+      min: 0,
       max: 10
     },
     migrations: {
