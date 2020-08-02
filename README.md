@@ -33,6 +33,7 @@ Ensuite un outil est fournis pour simplifier le développement je vous invite à
  ┣ 📂views                      -> les vues Pug (générer depuis la forge)
  ┣ 📜middlewares.ts             -> fichier où sont enregistrés les middlewares
  ┣ 📜route.ts                   -> fichier où sont enregistrés les routes
+ ┣ 📜publish.ts                 -> fichier où sont enregistrés les publish
  ┗ 📜socket.ts                  -> fichier où sont enregistrés les channel socket
 
 ```
