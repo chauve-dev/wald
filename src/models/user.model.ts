@@ -22,7 +22,15 @@ export class user extends Model {
       };
 
       static afterInsert({ inputItems }: any) {
-        subController.index('user', inputItems[0])
+        subController.index('user', inputItems[0], 'insert')
+      }
+
+      static afterUpdate({inputItems}: any){
+        subController.index('user', inputItems[0], 'update')
+      }
+
+      static afterDelete(){
+        subController.index('user', {}, 'delete')
       }
 
     static get tableName() {

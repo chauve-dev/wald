@@ -3,10 +3,10 @@ import io from './app'
 
 export class subController {
 
-    public static index(name: string, obj: any){
-        if(this.shouldBeProcessed(name)){
+    public static index(name: string, obj: any, type: string){
+        if(this.shouldBeProcessed(name, type)){
             io.then((io) => {
-                io.emit(`subscribe-${name}`, this.toSend(obj, name))
+                io.emit(`subscribe-${name}`, {data: this.toSend(obj, name), type: type})
             })
         }
     }
@@ -19,8 +19,8 @@ export class subController {
         return toReturn;
     }
 
-    static shouldBeProcessed(name: string){
-        if(publish[name]){
+    static shouldBeProcessed(name: string, type: string){
+        if(publish[name] && publish[name].type.includes(type.toLowerCase())){
             return true;
         }else{
             return false;

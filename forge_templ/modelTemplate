@@ -12,8 +12,16 @@ export class %%modelName%% extends Model {
     }
 
     static afterInsert({ inputItems }: any) {
-        subController.index('%%modelName%%', inputItems[0])
+        subController.index('%%modelName%%', inputItems[0], 'insert')
       }
+
+    static afterUpdate({inputItems}: any){
+    subController.index('%%modelName%%', inputItems[0], 'update')
+    }
+
+    static afterDelete(){
+    subController.index('%%modelName%%', {}, 'delete')
+    }
 
     static get jsonSchema() {
         return {

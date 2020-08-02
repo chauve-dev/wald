@@ -1,5 +1,5 @@
 var publish: any = {
-    "user": {data: ['username']}
+    "user": {data: ['username'], type: ['insert']}
 }
 
 export default publish

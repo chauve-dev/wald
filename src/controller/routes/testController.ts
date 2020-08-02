@@ -10,12 +10,11 @@ export default class testController extends authController{
             email: 'wald@wald.wald'
         })
 
-        await car.query().insert({
-            name: 'Walda',
-            userId: 0
-        })
+        await user.query().patch({ email: 'test'}).where('id', '=', 43)
 
-        car.query().where('userId', 0).then(users => {
+        await user.query().delete().where('id', '=', 46)
+
+        user.query().then(users => {
             this.response.send(users)
         });
     }
