@@ -88,16 +88,18 @@ node forge middleware nom
 ## Socket.io
 Wald inclus socket IO par défaut. le socket est déjà configuré sur le serveur web principal (5000 par défaut) il est possible de rajouter des évenements dans socket.ts
 
-## Publish Suscribe
-J'ai fini par ajouter un système de publish suscribe à la meteor en beaucoup plus simple, un evenement socket est envoyé à chaques fois qu'une bdd est mise à jour, le tout ce controle dans publish.ts ensuite l'evenement socket se trouve sur 'suscribe-nom du model' (pour le moment seul les inserts sont pris en compte), par exemple
+## Publish Subscribe
+J'ai fini par ajouter un système de publish subscribe à la meteor en beaucoup plus simple, un evenement socket est envoyé à chaques fois qu'une bdd est mise à jour, le tout ce controle dans publish.ts ensuite l'evenement socket se trouve sur 'suscribe-nom du model', par exemple
 
 ```
 J'ai le modèle user qui contient un username et un email
-je veux que tous les client soit au courant lors d'une modification de la db sur username mais je considère l'email comme sensible je veux donc uniquement envoyer le username
+je veux que tous les client soit au courant lors d'une modification 
+de la db sur username mais je considère l'email comme sensible 
+je veux donc uniquement envoyer le username
 
 publish.ts :
 var publish: any = {
-    "user": {data: ['username']}
+    "user": {data: ['username'], type: ['insert', 'delete', 'update']}
 }
 export default publish
 
@@ -106,7 +108,10 @@ socket.on('subscribe-user', (data) => {
       console.log(data)
     })
 
-ici je récupère dans l'evenement socket l'username du nouvel utilisateur à chaque mise à jour de la db.
+ici je récupère dans l'evenement socket l'username du nouvel 
+utilisateur à chaque mise à jour de la db.
 ```
+## TODO
+- validateur de formulaire (informations)
 
 > La perfection commence par la perte de la masse capilaire inutile.
