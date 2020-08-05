@@ -114,5 +114,6 @@ utilisateur à chaque mise à jour de la db.
 ```
 ## TODO
 - validateur de formulaire (informations)
+- ajout d'exception au middleware
 
 > La perfection commence par la perte de la masse capilaire inutile.
