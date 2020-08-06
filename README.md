@@ -1,5 +1,5 @@
 # Wald
-Un framework web minimaliste basé sur express
+Un framework web basé sur express, qui était d'orgine minimaliste.
 
 ## Important
 Attention d'origine cette surcouche est un test que j'ai au final publié, si vous décidez de l'utiliser il faut prendre en compte que ce système est susceptible de subir de lourdes modifications. Ce sera donc à vos risque et péril.
@@ -120,5 +120,6 @@ utilisateur à chaque mise à jour de la db.
 ```
 ## TODO
 - validateur de formulaire (informations)
+- Faker
 
 > La perfection commence par la perte de la masse capilaire inutile.
