@@ -55,12 +55,17 @@ if (route.length == 0){
 function registerMiddleware(element: any){
   app.use(function (req: express.Request, res: express.Response, next: express.NextFunction) {
     if(element.path == '*'){
-      import("./controller/middleware/" + element.controller).then((ctrl) => {
-        new ctrl.default(req, res, next);
-      });
+      if(!element.exception.includes(req.url.split('/')[1].toLowerCase())){
+        console.log(1)
+        import("./controller/middleware/" + element.controller).then((ctrl) => {
+          new ctrl.default(req, res, next);
+        });
+      }else{
+        next();
+      }
     }else{
       if(element.path.endsWith('*')){
-        if((element.type.includes(req.method.toLowerCase()) || element.type.includes(req.method.toUpperCase())) && req.url.toLowerCase().startsWith(element.path.replace('/*', ''))){
+        if((element.type.includes(req.method.toLowerCase()) || element.type.includes(req.method.toUpperCase())) && req.url.toLowerCase().startsWith(element.path.replace('/*', '')) && !element.exception.includes(req.url.replace(element.path.replace('/*', '')+'/', '').split('/')[0])){
           import("./controller/middleware/" + element.controller).then((ctrl) => {
               new ctrl.default(req, res, next);
           });

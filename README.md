@@ -67,6 +67,12 @@ Une middleware prend des routes fixe ou dynamique
 * middleware global
 /x/* middleware global à x
 /x middleware propre à x
+
+Il est aussi possible de définir des exception, 
+par exemple on a un middleware global (*) pour l'authentification.
+Mais on veux que ce middleware ne s'execute pas sur /login alors on ajoute dans la route middleware
+exception: ['login'] 
+qui dira que ce middleware ne s'execute pas sur /login
 ```
 ## Erreur 404 ?
 Dans l'état wald gère les erreur 404 avec le controleur errorController.ts qui dispose des même possibilité qu'un controleur de middleWare.
@@ -114,6 +120,5 @@ utilisateur à chaque mise à jour de la db.
 ```
 ## TODO
 - validateur de formulaire (informations)
-- ajout d'exception au middleware
 
 > La perfection commence par la perte de la masse capilaire inutile.
