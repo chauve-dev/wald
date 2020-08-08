@@ -56,7 +56,6 @@ function registerMiddleware(element: any){
   app.use(function (req: express.Request, res: express.Response, next: express.NextFunction) {
     if(element.path == '*'){
       if(!element.exception.includes(req.url.split('/')[1].toLowerCase())){
-        console.log(1)
         import("./controller/middleware/" + element.controller).then((ctrl) => {
           new ctrl.default(req, res, next);
         });
