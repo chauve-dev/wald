@@ -1,13 +1,14 @@
 import publish from './publish';
-import io from './app'
+import instance from "./instance";
 
 export class subController {
 
     public static index(name: string, obj: any, type: string){
         if(this.shouldBeProcessed(name, type)){
-            io.then((io) => {
-                io.emit(`subscribe-${name}`, {data: this.toSend(obj, name), type: type})
-            })
+            instance.getInstance()
+                .data
+                .io.emit(`subscribe-${name}`, {data: this.toSend(obj, name), type: type})
+
         }
     }
 
