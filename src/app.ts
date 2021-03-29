@@ -151,10 +151,11 @@ class app {
     async registerRoute(element: any){
         var type: string = element.type.toLowerCase() || 'get';
         if(['get', 'post', 'put', 'delete'].includes(type)){
-            await import("./controller/routes/" + element.controller).then((ctrl) => {
+            let controller = element.controller.split("::")
+            await import("./controller/routes/" + controller[0]).then((ctrl) => {
                 // @ts-ignore
                 this.ExpressApp[type](element.path, (req: Request, res: Response) => {
-                    new ctrl.default(req, res);
+                    new ctrl.default(req, res, controller[1]);
                 });
             });
             console.log(`\x1b[33m[Info] > ${element.path} Registered`,'\x1b[0m')
