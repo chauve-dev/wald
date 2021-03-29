@@ -6,12 +6,13 @@ export default class controller{
     params: any;
     session: any;
 
-    constructor(request: Request, response: Response){
+    constructor(request: Request, response: Response, fun: string){
         this.request = request;
         this.response = response;
         this.params = request.params;
         this.session = request.session;
-        this.index();
+        // @ts-ignore
+        this[fun]();
     }
 
     index(){

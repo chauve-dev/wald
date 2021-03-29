@@ -59,6 +59,14 @@ Ainsi vous pouvez implémenter les méthode d'authentification dans le controleu
 
 ## Routes
 Les routes se trouve dans route.ts
+```
+Une route se compose comme ceci :
+ {path: "/", controller: "indexController::index", type: "get"}
+ path étant le chemin
+ controleur étant séparé en deux partie lecontroleur::laméthode
+ type étant la méthode (get, post, put, delete)
+ le controleur se trouve dans src/controller/routes/lecontroleur.ts
+```
 
 ## MiddleWare
 Les middleWares se configure dans middlewares.ts
