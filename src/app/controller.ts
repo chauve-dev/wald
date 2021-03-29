@@ -12,7 +12,12 @@ export default class controller{
         this.params = request.params;
         this.session = request.session;
         // @ts-ignore
-        this[fun]();
+        if(!this[fun]){
+            this.index();
+        } else {
+            // @ts-ignore
+            this[fun]();
+        }
     }
 
     index(){
