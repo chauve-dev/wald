@@ -10,43 +10,56 @@ require('dotenv').config()
 import SocketIO from "socket.io";
 import http, {createServer} from "http";
 import instance from "./instance";
+import {extension} from "./app/extensionController";
+import * as fs from "fs";
 
 class app {
-    private ExpressApp: Application;
-    private server: http.Server;
-    public io: SocketIO.Server;
-    private sessionMiddleware: RequestHandler;
+    private ExpressApp!: Application;
+    private server!: http.Server;
+    public io!: SocketIO.Server;
+    private sessionMiddleware!: RequestHandler;
 
 
-    constructor(port: number|undefined) {
-        this.checks(async(errors: Array<String>, success: boolean) => {
+    constructor(port: number | undefined) {
+        this.init(port);
+    }
+
+    async init(port: number | undefined){
+        this.checks(async (errors: Array<String>, success: boolean) => {
             await errors.forEach((data) => {
                 console.error(data);
-            }, ()=>{
-                if(!success) return process.exit(1);
+            }, () => {
+                if (!success) return process.exit(1);
             });
         });
         this.ExpressApp = this.expressInit('pug');
+        const extensions = await this.loadExtension();
+        for (const extension of extensions){
+            await extension.before();
+        }
         this.sessionMiddleware = this.expressSession();
         this.expressRegisters();
         this.generateSiteMap(); // generate the site map
         this.server = createServer(this.ExpressApp); // create the http server with express app
         this.io = SocketIO(this.server); // declare socket.io server
-
         // register the session middleware for socket io (to get access to session in socket.io)
         let self = this;
-        this.io.use(function(socket: SocketIO.Socket, next: NextFunction) {
+        this.io.use(function (socket: SocketIO.Socket, next: NextFunction) {
             self.sessionMiddleware(socket.request, socket.request.res || {}, next);
         });
         // register the socket IO file (maybe this will change in future to setup socket channel controllers)
         import('./socket').then((socket) => {
             socket.default(this.io)
-            console.log('\x1b[36m[Info] > Socket.io listening','\x1b[0m')
-        }).then(() => {
+            console.log('\x1b[36m[Info] > Socket.io listening', '\x1b[0m')
+        }).then(async () => {
             this.startServer(this.server, port);
+            for (const extension of extensions){
+                await extension.after();
+            }
         });
 
         instance.getInstance().data['io'] = this.io;
+
     }
 
     expressInit(viewEngine: string | undefined): Application{
@@ -106,6 +119,17 @@ class app {
             success = false;
         }
         callback(errors, success);
+    }
+
+    async loadExtension(): Promise<any> {
+        let extensions: Array<any> = [];
+        var files = fs.readdirSync(__dirname+'/extensions');
+        for (const e of files){
+            await import("./extensions/" + e + '/controller').then((ctrl) => {
+                extensions.push(new ctrl.default(this.ExpressApp));
+            });
+        }
+        return extensions;
     }
 
     registerMiddleware(element: any){
