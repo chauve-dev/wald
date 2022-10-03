@@ -1,11 +1,11 @@
 {
   "name": "wald",
   "version": "1.1.0",
-  "description": "Un framework web minimaliste basé sur express",
+  "description": "Un framework web minimaliste basé sur fastify",
   "scripts": {
     "build": "tsc -p . && cp -r ./src/views ./dist/views  && cp -r ./src/public ./dist/public",
-    "start": "node dist/app.js",
-    "dev": "nodemon src/app.ts"
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts"
   },
   "author": "JEANTET Joey",
   "license": "MIT",
@@ -17,7 +17,6 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.1.8",
     "fastify": "^4.7.0",
-    "objection": "^2.2.15",
     "pg": "^8.5.1",
     "pug": "^3.0.2",
     "sqlite3": "^5.0.3"

@@ -1,4 +1,4 @@
-import {extension} from "../../app/extensionController";
+import {extension} from "../../core/app/extensionController";
 import {FastifyReply, FastifyRequest} from "fastify";
 
 export default class monExtension extends extension {
