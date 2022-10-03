@@ -1,4 +1,4 @@
-import controller from "../../core/app/controller";
+import controller from "@core/app/controller";
 
 export default class sessionController extends controller{
     index(){

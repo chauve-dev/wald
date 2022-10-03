@@ -1,9 +1,9 @@
-import Fastify, {FastifyInstance, FastifyReply, FastifyRequest} from 'fastify';
+import Fastify, {FastifyInstance} from 'fastify';
 const fastifySession = require('@fastify/session');
 const fastifyCookie = require('@fastify/cookie');
-import route from "../route";
+import route from "@root/route";
 require('dotenv').config()
-import { extension } from "./app/extensionController";
+import { extension } from "@core/app/extensionController";
 import * as fs from "fs";
 import path from "path";
 
@@ -80,7 +80,7 @@ export default class app {
         let extensions: Array<any> = [];
         var files = fs.readdirSync(__dirname+'/../extensions');
         for (const e of files){
-            await import("../extensions/" + e + '/controller').then((ctrl) => {
+            await import("@extensions/" + e + '/controller').then((ctrl) => {
                 extensions.push(new ctrl.default(this.app));
             });
         }
@@ -91,7 +91,7 @@ export default class app {
         var type: string = element.type.toLowerCase() || 'get';
         if(['get', 'post', 'put', 'delete'].includes(type)){
             let controller = element.controller.split("::")
-            await import("../controller/routes/" + controller[0]).then((ctrl) => {
+            await import("@controllers/routes/" + controller[0]).then((ctrl) => {
                 // @ts-ignore
                 this.app[type](element.path, (req: Request, res: Response) => {
                     new ctrl.default(req, res, controller[1]);

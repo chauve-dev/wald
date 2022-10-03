@@ -1,4 +1,4 @@
-import {extension} from "../../core/app/extensionController";
+import {extension} from "@core/app/extensionController";
 import authController from "./src/authController";
 
 export default class fastifyHooker extends extension {
