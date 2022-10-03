@@ -1,24 +1,14 @@
-import express, {Application, RequestHandler, Response, Request, NextFunction} from "express";
-import session, {SessionOptions} from 'express-session';
+import Fastify, {FastifyInstance, FastifyReply, FastifyRequest} from 'fastify';
+const fastifySession = require('@fastify/session');
+const fastifyCookie = require('@fastify/cookie');
 import route from "./route";
-import middleWare from "./middlewares"
-import path from "path";
-import cookieParser from 'cookie-parser';
-var sitemap = require('express-sitemap')();
-const sassMiddleware = require('node-sass-middleware');
 require('dotenv').config()
-import SocketIO from "socket.io";
-import http, {createServer} from "http";
-import instance from "./instance";
 import {extension} from "./app/extensionController";
 import * as fs from "fs";
+import path from "path";
 
 class app {
-    private ExpressApp!: Application;
-    private server!: http.Server;
-    public io!: SocketIO.Server;
-    private sessionMiddleware!: RequestHandler;
-
+    private app!: FastifyInstance;
 
     constructor(port: number | undefined) {
         this.init(port);
@@ -32,83 +22,48 @@ class app {
                 if (!success) return process.exit(1);
             });
         });
-        this.ExpressApp = this.expressInit('pug');
+        this.app = this.fastifyInit('pug');
+        this.fastifySession();
         const extensions = await this.loadExtension();
         for (const extension of extensions){
             await extension.before();
         }
-        this.sessionMiddleware = this.expressSession();
-        this.expressRegisters();
-        this.generateSiteMap(); // generate the site map
-        this.server = createServer(this.ExpressApp); // create the http server with express app
-        this.io = SocketIO(this.server); // declare socket.io server
-        // register the session middleware for socket io (to get access to session in socket.io)
-        let self = this;
-        this.io.use(function (socket: SocketIO.Socket, next: NextFunction) {
-            self.sessionMiddleware(socket.request, socket.request.res || {}, next);
-        });
-        // register the socket IO file (maybe this will change in future to setup socket channel controllers)
-        import('./socket').then((socket) => {
-            socket.default(this.io)
-            console.log('\x1b[36m[Info] > Socket.io listening', '\x1b[0m')
-        }).then(async () => {
-            this.startServer(this.server, port);
-            for (const extension of extensions){
-                await extension.after();
-            }
-        });
+        await this.fastifyRegisterer();
 
-        instance.getInstance().data['io'] = this.io;
-
+        this.startServer(port);
     }
 
-    expressInit(viewEngine: string | undefined): Application{
-        const app: Application = express();
-        app.set('views', path.join(__dirname, 'views'));
-        app.set('view engine', (viewEngine) ? viewEngine : "pug");
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: false }));
-        app.use(cookieParser());
-        app.use(sassMiddleware({
-            src: path.join(__dirname, 'public'),
-            dest: path.join(__dirname, 'public'),
-            indentedSyntax: process.env.INDENTED_SYNTAX||true, // true = .sass and false = .scss
-            sourceMap: true
-        }));
-        app.use(express.static(path.join(__dirname, 'public')));
+    fastifyInit(viewEngine: string): FastifyInstance{
+        const app: FastifyInstance = Fastify({logger: true});
+        app.register(require("@fastify/view"), {
+            root: path.join(__dirname, "views"),
+            engine: {
+                pug: require(viewEngine),
+            },
+        });
 
+        app.register(require('@fastify/static'), {
+            root: path.join(__dirname, 'public'),
+            prefix: '/public/', // optional: default '/'
+        })
         return app;
     }
 
-    async expressRegisters(){
-        for (let element of middleWare){
-            this.registerMiddleware(element);
-        }
-        console.log('\x1b[36m[Info] > Tous les middlewares sont enregistré.','\x1b[0m');
-
+    async fastifyRegisterer(){
         for(let element of route){
             await this.registerRoute(element);
         }
         console.log('\x1b[36m[Info] > Toutes les routes sont enregistré.','\x1b[0m');
-        this.registerErrorMiddleWare();
     }
 
-    expressSession(): RequestHandler{
-        var sess: SessionOptions = {
-            resave: false,
-            saveUninitialized: true,
-            secret: process.env.SESSION_SECRET || "defaultSecret",
-            name: 'waldSession',
-            cookie: {}
-        }
-
-        if (this.ExpressApp.get('env') === 'production') {
-            this.ExpressApp.set('trust proxy', 1) // trust first proxy
-            sess.cookie = {
-                secure: true
+    fastifySession(): void{
+        this.app.register(fastifyCookie);
+        this.app.register(
+            fastifySession,
+            {
+                secret: process.env.SESSION_SECRET || "defaultSecretOf32characterOrMore"
             }
-        }
-        return session(sess)
+        );
     }
 
     checks(callback: any){
@@ -126,21 +81,19 @@ class app {
         var files = fs.readdirSync(__dirname+'/extensions');
         for (const e of files){
             await import("./extensions/" + e + '/controller').then((ctrl) => {
-                extensions.push(new ctrl.default(this.ExpressApp));
+                extensions.push(new ctrl.default(this.app));
             });
         }
         return extensions;
     }
 
     registerMiddleware(element: any){
-        this.ExpressApp.use((req: Request, res: Response, next: NextFunction) =>{
+        this.app.all(element.path, (req: FastifyRequest, res: FastifyReply) =>{
             if(element.path == '*'){
                 if(!element.exception.includes(req.url.split('/')[1].toLowerCase())){
                     import("./controller/middleware/" + element.controller).then((ctrl) => {
-                        new ctrl.default(req, res, next);
+                        new ctrl.default(req, res);
                     });
-                }else{
-                    next();
                 }
             }else{
                 if(element.path.endsWith('*')){
@@ -151,10 +104,8 @@ class app {
                         && !element.exception.includes(req.url.replace(element.path.replace('/*', '')+'/', '').split('/')[0]))
                     {
                         import("./controller/middleware/" + element.controller).then((ctrl) => {
-                            new ctrl.default(req, res, next);
+                            new ctrl.default(req, res);
                         });
-                    }else{
-                        next();
                     }
                 }else{
                     if((element.type.includes(req.method.toLowerCase())
@@ -162,10 +113,8 @@ class app {
                         && element.path == req.url.toLowerCase())
                     {
                         import("./controller/middleware/" + element.controller).then((ctrl) => {
-                            new ctrl.default(req, res, next);
+                            new ctrl.default(req, res);
                         });
-                    }else{
-                        next();
                     }
                 }
             }
@@ -178,7 +127,7 @@ class app {
             let controller = element.controller.split("::")
             await import("./controller/routes/" + controller[0]).then((ctrl) => {
                 // @ts-ignore
-                this.ExpressApp[type](element.path, (req: Request, res: Response) => {
+                this.app[type](element.path, (req: Request, res: Response) => {
                     new ctrl.default(req, res, controller[1]);
                 });
             });
@@ -188,21 +137,11 @@ class app {
         }
     }
 
-    registerErrorMiddleWare(){
-        this.ExpressApp.use(function(req: express.Request, res: express.Response, next: express.NextFunction){
-            import("./controller/errorController").then((ctrl)=>{
-                new ctrl.default(req, res, next);
-            });
-        })
-    }
-
-    generateSiteMap(){
-        sitemap.generate(this.ExpressApp); // generate sitemap from express route, you can set generate inside sitemap({})
-        sitemap.XMLtoFile(__dirname+'/public/sitemap.xml'); // write this map to file
-    }
-
-    startServer(server: http.Server, port: number | undefined) {
-        server.listen(process.env.APP_PORT || port, () => console.log("\x1b[32m[Info] > Server Running",'\x1b[0m'));
+    startServer(port: number | undefined) {
+        this.app.listen({ port: port }, (err) => {
+            if (err) throw err;
+            console.log("\x1b[32m[Info] > Server Running",'\x1b[0m');
+        });
     }
 }
 

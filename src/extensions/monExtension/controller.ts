@@ -1,11 +1,11 @@
 import {extension} from "../../app/extensionController";
-import { Application, Request, Response } from "express";
+import {FastifyReply, FastifyRequest} from "fastify";
 
 export default class monExtension extends extension {
 
     async before() {
         console.log("before")
-        this.application.get('/extension', (req: Request, res: Response) => {
+        this.application.get('/extension', (req: FastifyRequest, res: FastifyReply) => {
             res.send("ok");
         })
     }

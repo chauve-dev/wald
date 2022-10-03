@@ -1,16 +1,15 @@
-import {Request, Response, NextFunction} from "express";
+import {FastifyReply, FastifyRequest} from "fastify";
+
 export default class controllerMiddelware{
 
-    request: Request;
-    response: Response;
-    next: NextFunction;
+    request: FastifyRequest;
+    response: FastifyReply;
     params: any;
     session: any;
 
-    constructor(request: Request, response: Response, next: NextFunction){
+    constructor(request: FastifyRequest, response: FastifyReply){
         this.request = request;
         this.response = response;
-        this.next = next;
         this.params = request.params;
         this.session = request.session;
         this.index();
@@ -21,11 +20,7 @@ export default class controllerMiddelware{
     }
 
     doSessionExists(){
-        if(this.session){
-            return true;
-        }else{
-            return false;
-        }
+        return !!this.session;
     }
 
 }
