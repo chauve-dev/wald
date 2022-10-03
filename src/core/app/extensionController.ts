@@ -1,4 +1,4 @@
-import instance from "../instance";
+import instance from "@core/instance";
 import {FastifyInstance} from "fastify";
 
 class extension {

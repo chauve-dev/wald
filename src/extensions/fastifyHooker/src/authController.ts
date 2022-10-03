@@ -8,7 +8,7 @@ export default class authController {
     }
 
     private main(request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) {
-        console.log('hook');
+        console.log(`Ce log vient de l'extension fatifyHooker, c'est un exemple de hook et remplace les middleware`);
         done();
     }
 }

@@ -1,20 +1,20 @@
-import Fastify, {FastifyInstance, FastifyReply, FastifyRequest} from 'fastify';
+import Fastify, {FastifyInstance} from 'fastify';
 const fastifySession = require('@fastify/session');
 const fastifyCookie = require('@fastify/cookie');
-import route from "./route";
+import route from "@root/route";
 require('dotenv').config()
-import {extension} from "./app/extensionController";
+import { extension } from "@core/app/extensionController";
 import * as fs from "fs";
 import path from "path";
 
-class app {
+export default class app {
     private app!: FastifyInstance;
 
-    constructor(port: number | undefined) {
-        this.init(port);
+    constructor(port: number, viewEngine: string) {
+        this.init(port, viewEngine);
     }
 
-    async init(port: number | undefined){
+    async init(port: number | undefined, viewEngine: string){
         this.checks(async (errors: Array<String>, success: boolean) => {
             await errors.forEach((data) => {
                 console.error(data);
@@ -22,7 +22,7 @@ class app {
                 if (!success) return process.exit(1);
             });
         });
-        this.app = this.fastifyInit('pug');
+        this.app = this.fastifyInit(viewEngine);
         this.fastifySession();
         const extensions = await this.loadExtension();
         for (const extension of extensions){
@@ -34,16 +34,16 @@ class app {
     }
 
     fastifyInit(viewEngine: string): FastifyInstance{
-        const app: FastifyInstance = Fastify({logger: true});
+        const app: FastifyInstance = Fastify({logger: false});
         app.register(require("@fastify/view"), {
-            root: path.join(__dirname, "views"),
+            root: path.join(__dirname, '..', "views"),
             engine: {
                 pug: require(viewEngine),
             },
         });
 
         app.register(require('@fastify/static'), {
-            root: path.join(__dirname, 'public'),
+            root: path.join(__dirname, '..', 'public'),
             prefix: '/public/', // optional: default '/'
         })
         return app;
@@ -78,9 +78,9 @@ class app {
 
     async loadExtension(): Promise<any> {
         let extensions: Array<any> = [];
-        var files = fs.readdirSync(__dirname+'/extensions');
+        var files = fs.readdirSync(__dirname+'/../extensions');
         for (const e of files){
-            await import("./extensions/" + e + '/controller').then((ctrl) => {
+            await import("@extensions/" + e + '/controller').then((ctrl) => {
                 extensions.push(new ctrl.default(this.app));
             });
         }
@@ -91,7 +91,7 @@ class app {
         var type: string = element.type.toLowerCase() || 'get';
         if(['get', 'post', 'put', 'delete'].includes(type)){
             let controller = element.controller.split("::")
-            await import("./controller/routes/" + controller[0]).then((ctrl) => {
+            await import("@controllers/routes/" + controller[0]).then((ctrl) => {
                 // @ts-ignore
                 this.app[type](element.path, (req: Request, res: Response) => {
                     new ctrl.default(req, res, controller[1]);
@@ -110,5 +110,3 @@ class app {
         });
     }
 }
-
-const wald = new app(3000);
