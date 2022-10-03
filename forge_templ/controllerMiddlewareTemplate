@@ -1,7 +1,0 @@
-import controllerMiddelware from "../../app/controllerMiddleware";
-
-export default class %%controllerName%% extends controllerMiddelware{
-    index(){
-        this.next();
-    }
-}

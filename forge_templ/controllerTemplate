@@ -1,7 +1,7 @@
-import controller from "../../app/controller";
+import controller from "@core/app/controller";
 
 export default class %%controllerName%% extends controller{
     index(){
-        this.response.render('%%viewName%%');
+        this.response.view('%%viewName%%');
     }
 }

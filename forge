@@ -1,74 +1,31 @@
+#! /usr/bin/env node
+const { program } = require('commander')
 var fs = require("fs");
+program
+    .command('controleur')
+    .description('Génère un nouveau controleur')
+    .requiredOption('-n, --name <value>', 'nom du controleur')
+    .option('-v, --vue', 'bool, génère la vue si présent')
+    .action(controleur)
 
-if(process.argv[2]==undefined)
-return;
+program.parse();
 
-var args = process.argv.slice(2);
-var type = args[0].toLowerCase();
-args = args.slice(1);
-switch (type) {
-  case "controller/vue": {
-    if (!fs.existsSync("./src/views/"+args[0]+".pug") && !fs.existsSync("./src/controller/routes/"+args[0]+"Controller.ts")) {
-        fs.writeFile("./src/views/"+args[0]+".pug", "p "+args[0], function (err) {
-            if (err) throw err;
-          });
-      
-          fs.readFile('./forge_templ/controllerTemplate', function(err, data) {
-              fs.writeFile("./src/controller/routes/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", args[0]), function (err) {
-                  if (err) throw err;
-                });
+function controleur(options) {
+    console.log(options)
+    if (!fs.existsSync(`./src/views/${options.name}.pug`) && !fs.existsSync(`./src/controller/routes/${options.name}Controller.ts`)) {
+        if(options.vue) {
+            fs.writeFile(`./src/views/${options.name}.pug`, `p ${options.name}`, function (err) {
+                if (err) throw err;
             });
-        console.log("\t\t\tInfo : \tContoleur et vue créer")
-      }else{
-          console.log("\t\t\tInfo : \tErreur les fichiers existe déjà.")
-      }
-    break;
-  }
+        }
 
-  case "controller":{
-    if (!fs.existsSync("./src/controller/routes/"+args[0]+"Controller.ts")) {
-          fs.readFile('./forge_templ/controllerTemplate', function(err, data) {
-              fs.writeFile("./src/controller/routes/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", 'index'), function (err) {
-                  if (err) throw err;
-                });
-            });
-        console.log("\t\t\tInfo : \tContoleur créer")
-      }else{
-          console.log("\t\t\tInfo : \tErreur le fichier existe déjà.")
-      }
-      break;
-  }
-
-  case "middleware":{
-    if (!fs.existsSync("./src/controller/middleware/"+args[0]+"Controller.ts")) {
-          fs.readFile('./forge_templ/controllerMiddlewareTemplate', function(err, data) {
-              fs.writeFile("./src/controller/middleware/"+args[0]+"Controller.ts", data.toString().replace("%%controllerName%%", args[0]+"Controller").replace("%%viewName%%", 'index'), function (err) {
-                  if (err) throw err;
-                });
-            });
-        console.log("\t\t\tInfo : \tContoleur créer")
-      }else{
-          console.log("\t\t\tInfo : \tErreur le fichier existe déjà.")
-      }
-      break;
-  }
-
-  case "model":{
-    if (!fs.existsSync("./src/models/"+args[0]+".model.ts")) {
-      fs.readFile('./forge_templ/modelTemplate', function(err, data) {
-          fs.writeFile("./src/models/"+args[0]+".model.ts", data.toString().replace(new RegExp('%%modelName%%', 'g'), args[0]).replace(new RegExp('%%modelNameMin%%', 'g'), args[0].toLowerCase()), function (err) {
-              if (err) throw err;
+        fs.readFile('./forge_templ/controllerTemplate', function(err, data) {
+            fs.writeFile(`./src/controller/routes/${options.name}Controller.ts`, data.toString().replace("%%controllerName%%", `${options.name}Controller`).replace("%%viewName%%", options.name), function (err) {
+                if (err) throw err;
             });
         });
-      console.log("\t\t\tInfo : \tModel créer")
+        console.log("\t\t\tInfo : \tContoleur créer")
     }else{
-        console.log("\t\t\tInfo : \tErreur le fichier existe déjà.")
+        console.log("\t\t\tInfo : \tErreur les fichiers existe déjà.")
     }
-    break;
-  }
-
-  default: {
-      console.log('\t\t\tInfo : \tCommande non reconnu \n\t\t\t\tnode forge controller/vue %%nom%% \n\t\t\t\tnode forge controller %%nom%% \n\t\t\t\tnode forge model %%nom%%');
-      break;
-  }
 }
