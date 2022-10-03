@@ -1,11 +1,11 @@
-import {Application} from "express";
 import instance from "../instance";
+import {FastifyInstance} from "fastify";
 
 class extension {
-    protected application: Application;
+    protected application: FastifyInstance;
     protected instance: instance;
 
-    constructor(app: Application) {
+    constructor(app: FastifyInstance) {
         this.application = app;
         this.instance = instance.getInstance();
     }

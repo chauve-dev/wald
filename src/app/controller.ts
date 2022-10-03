@@ -1,15 +1,16 @@
-import {Request, Response} from "express";
-export default class controller{
+import {FastifyReply, FastifyRequest} from "fastify";
 
-    request: Request;
-    response: Response;
+export default class controller {
+
+    request: FastifyRequest;
+    response: FastifyReply;
     params: any;
     session: any;
 
-    constructor(request: Request, response: Response, fun: string){
+    constructor(request: FastifyRequest, response: FastifyReply, fun: string){
         this.request = request;
         this.response = response;
-        this.params = request.params;
+        this.params = request.body;
         this.session = request.session;
         // @ts-ignore
         if(!this[fun]){
