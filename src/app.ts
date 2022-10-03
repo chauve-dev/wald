@@ -87,40 +87,6 @@ class app {
         return extensions;
     }
 
-    registerMiddleware(element: any){
-        this.app.all(element.path, (req: FastifyRequest, res: FastifyReply) =>{
-            if(element.path == '*'){
-                if(!element.exception.includes(req.url.split('/')[1].toLowerCase())){
-                    import("./controller/middleware/" + element.controller).then((ctrl) => {
-                        new ctrl.default(req, res);
-                    });
-                }
-            }else{
-                if(element.path.endsWith('*')){
-                    if((
-                        element.type.includes(req.method.toLowerCase())
-                        || element.type.includes(req.method.toUpperCase()))
-                        && req.url.toLowerCase().startsWith(element.path.replace('/*', ''))
-                        && !element.exception.includes(req.url.replace(element.path.replace('/*', '')+'/', '').split('/')[0]))
-                    {
-                        import("./controller/middleware/" + element.controller).then((ctrl) => {
-                            new ctrl.default(req, res);
-                        });
-                    }
-                }else{
-                    if((element.type.includes(req.method.toLowerCase())
-                        || element.type.includes(req.method.toUpperCase()))
-                        && element.path == req.url.toLowerCase())
-                    {
-                        import("./controller/middleware/" + element.controller).then((ctrl) => {
-                            new ctrl.default(req, res);
-                        });
-                    }
-                }
-            }
-        });
-    }
-
     async registerRoute(element: any){
         var type: string = element.type.toLowerCase() || 'get';
         if(['get', 'post', 'put', 'delete'].includes(type)){
