@@ -34,7 +34,7 @@
     "fastify": "^4.8.1",
     "pg": "^8.5.1",
     "pug": "^3.0.2",
-    "sqlite3": "^5.0.3",
+    "sqlite3": "^5.1.5",
     "tsconfig-paths": "^4.1.0"
   },
   "devDependencies": {
